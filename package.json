@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "external csgo ts base v2 by xsip",
   "scripts": {
+    "prepare" : "npm run build",
     "build": "tsc",
     "demo": "ts-node-dev src/main.ts"
   },

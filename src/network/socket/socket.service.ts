@@ -1,5 +1,5 @@
 import * as _WebSocket from 'ws';
-import { radar } from '../../shared/declerations';
+
 
 import WebSocket = require('ws');
 
@@ -53,12 +53,6 @@ export class SocketService {
 
     private handleRequest = (request: any) => {
       console.log(request);
-      if (request.radarSize) {
-        radar.setRadarSize(request.radarSize);
-      }
-      if (request.radarPos) {
-        radar.setRadarPos(request.radarPos);
-      }
     };
 
     private onOverlayDisconnect(ws: WebSocket) {
