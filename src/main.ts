@@ -8,15 +8,19 @@ const base: BaseService = new BaseService({
     socketServicePort: 8080,
   },
 });
+
 base.run();
+
 let allLocations = [];
 let position: any;
 let viewAngles: any;
 let vecView: any;
+
 base.afterEntityLoop().subscribe((data) => {
   data.sendMessageToEachWsClient(JSON.stringify({ entities: allLocations, local: { position, viewAngles, vecView } }));
   allLocations = [];
 });
+
 base.onNewData().subscribe((data) => {
   const crosshairId = data.localEntity.read<number>(offsets.netvars.m_iCrosshairId, EMemoryTypes.int);
   allLocations.push(data.currentEntity.origin);
