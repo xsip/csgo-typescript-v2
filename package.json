@@ -1,0 +1,28 @@
+{
+  "name": "external-go-v2",
+  "version": "1.0.0",
+  "description": "external csgo ts base v2 by xsip",
+  "scripts": {
+    "build": "tsc",
+    "demo": "ts-node-dev src/main.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "memoryjs": "^3.2.3",
+    "ws": "^7.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.4",
+    "@types/ws": "^6.0.4",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "http-server": "^0.12.1",
+    "ts-node": "^8.6.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
+  }
+}
