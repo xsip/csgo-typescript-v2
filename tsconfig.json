@@ -3,7 +3,7 @@
     "module": "commonjs",
     "noImplicitAny": false,
     "sourceMap": true,
-    "outDir": "./dst/",
+    "outDir": "./lib/",
     "target": "ESNEXT",
     "typeRoots": [
       "./node_modules/@types"

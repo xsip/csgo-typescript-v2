@@ -2,6 +2,8 @@
   "name": "external-go-v2",
   "version": "1.0.0",
   "description": "external csgo ts base v2 by xsip",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "prepare" : "npm run build",
     "build": "tsc",
