@@ -1,15 +1,16 @@
 import { ClientStateService } from './game/clientState/clientState.service';
 import { EntityBase } from './game/entity/entity.service';
 import { PlayerEntity } from './game/entity/entity.interfaces';
-import {Player} from "./game/player/player";
-import {Resolver} from "../typings/typings";
-import {offsets} from "./game/offsets";
+import { Player } from './game/player/player';
+import { Resolver } from '../typings/typings';
+import { Netvars, OffsetCollection, Signatures } from './offsets';
 
 export interface HackConfig {
     webSocketService?: {
         start: boolean;
         socketServicePort: number;
     }
+    offsets?: OffsetCollection;
 }
 
 export interface BaseGameData {
@@ -18,6 +19,7 @@ export interface BaseGameData {
     entityBase: EntityBase;
     localEntity: PlayerEntity;
     player: Player;
+    offsets: OffsetCollection;
     sendMessageToEachWsClient: (message: any) => void;
 }
 export interface AfterEntityLoopData extends BaseGameData{
@@ -29,9 +31,9 @@ export interface GameData extends BaseGameData{
     player: Player;
 }
 
-export interface PlayerEntityResolver extends Resolver<typeof offsets.netvars> {
+export interface PlayerEntityResolver extends Resolver<Netvars> {
     base?: any;
 }
-export interface MiscEntityResolver extends Resolver<typeof offsets.netvars & typeof offsets.signatures> {
+export interface MiscEntityResolver extends Resolver<Netvars & Signatures> {
     base?: any;
 }

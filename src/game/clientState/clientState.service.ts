@@ -1,7 +1,7 @@
 import {
   createResolver, gM, mT, rpm,
 } from '../../shared/declerations';
-import { offsets, TypesForSignatures } from '../offsets';
+import { OffsetCollection, Signatures, MemoryTypesForSignatures } from '../../offsets';
 import { Resolver } from '../../../typings/typings';
 import { Vec3 } from '../../math/extendedMath.service';
 
@@ -23,13 +23,13 @@ export class ClientStateService {
 
     private clientStateBase;
 
-    private resolverResult: Resolver<typeof offsets.signatures>;
+    private resolverResult: Resolver<Signatures>;
 
     private privateViewAngles = { x: 0, y: 0, z: 0 };
 
 
-    constructor() {
-      this.clientStateBase = rpm(gM('engine.dll').modBaseAddr + offsets.signatures.dwClientState, mT.dword);
+    constructor(private offsets: OffsetCollection) {
+      this.clientStateBase = rpm(gM('engine.dll').modBaseAddr + this.offsets.signatures.dwClientState, mT.dword);
     }
 
 
@@ -41,9 +41,9 @@ export class ClientStateService {
       this.localEntityIndex = resolver.dwClientState_GetLocalPlayer();
     }
 
-    private resolver(): Resolver<typeof offsets.signatures> {
+    private resolver(): Resolver<Signatures> {
       if (!this.resolverResult) {
-        this.resolverResult = createResolver<typeof offsets.signatures>(this.clientStateBase, offsets.signatures, TypesForSignatures, {});
+        this.resolverResult = createResolver<Signatures>(this.clientStateBase, this.offsets.signatures, MemoryTypesForSignatures, {});
       }
       return this.resolverResult;
     }

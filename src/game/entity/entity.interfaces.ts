@@ -1,8 +1,8 @@
 import { Vec3 } from '../../math/extendedMath.service';
-import { EMemoryTypes } from '../../process/process.interfaces';
+import { MemoryTypes } from '../../process/process.interfaces';
 import {WeaponEntity} from "./weapon.entity";
 export interface Entity {
-    read: <T>(offset: number, type: EMemoryTypes) => T;
+    read: <T>(offset: number, type: MemoryTypes) => T;
     readBuffer: (offset: number, bytes: number) => Buffer;
 }
 

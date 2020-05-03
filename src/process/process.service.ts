@@ -2,7 +2,7 @@ import * as memoryJs from 'memoryJs';
 import {
   IModuleObject, IModuleListEntry, MemoryTypes, IProcessObject,
 } from 'memoryJs';
-import { EMemoryTypes } from './process.interfaces';
+import { MemoryTypes } from './process.interfaces';
 
 export class ProcessService implements IProcessObject {
     dwSize: number;
@@ -49,15 +49,15 @@ export class ProcessService implements IProcessObject {
       });
     }
 
-    readMemory(addr: any, type: EMemoryTypes) {
+    readMemory(addr: any, type: MemoryTypes) {
       return memoryJs.readMemory(this.handle, addr, type);
     }
 
-    readMatrix(addr: any, type: EMemoryTypes) {
+    readMatrix(addr: any, type: MemoryTypes) {
       return memoryJs.readMemory(this.handle, addr, type);
     }
 
-    writeMemory(addr: any, value, type: EMemoryTypes, handle?: IModuleListEntry) {
+    writeMemory(addr: any, value, type: MemoryTypes, handle?: IModuleListEntry) {
       return memoryJs.writeMemory(this.handle, addr, value, type);
     }
 

@@ -46,10 +46,11 @@ export class BaseService {
       localEntity: entityBase.entity(clientState.localEntityIndex),
       player,
       sendMessageToEachWsClient: this.socketService.sendToEachClient.bind(this.socketService),
+      offsets: this.config.offsets,
     });
 
     private doRun() {
-      hackBase((currentEntity: PlayerEntity, currentEntityIndex: number) => {
+      hackBase(this.config.offsets, (currentEntity: PlayerEntity, currentEntityIndex: number) => {
         this.newDataSubject.next({
           ...this.getBaseReply(),
           currentEntity,

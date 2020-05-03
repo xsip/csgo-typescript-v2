@@ -1,12 +1,13 @@
 import { BaseService } from './base.service';
-import { offsets } from './game/offsets';
-import { EMemoryTypes } from './process/process.interfaces';
+import { MemoryTypes } from './process/process.interfaces';
+import { offsets } from './offsets';
 
 const base: BaseService = new BaseService({
   webSocketService: {
     start: true,
     socketServicePort: 8080,
   },
+  offsets,
 });
 
 base.run();
@@ -22,7 +23,7 @@ base.afterEntityLoop().subscribe((data) => {
 });
 
 base.onNewData().subscribe((data) => {
-  const crosshairId = data.localEntity.read<number>(offsets.netvars.m_iCrosshairId, EMemoryTypes.int);
+  const crosshairId = data.localEntity.read<number>(data.offsets.netvars.m_iCrosshairId, MemoryTypes.int);
   allLocations.push(data.currentEntity.origin);
   position = data.localEntity.origin;
   viewAngles = data.clientState.viewAngles;
@@ -45,7 +46,7 @@ base.onNewData().subscribe((data) => {
   //  const health = data.localEntity.health;
 
   // 3. Reading a type by offset
-  //  const health = data.localEntity.read<number>(offsets.netvars.m_iHealth,EMemoryTypes.int);
+  //  const health = data.localEntity.read<number>(offsets.netvars.m_iHealth,MemoryTypes.int);
   //  console.log(data.localEntity.health);
 
   // To get the bone position of a PlayerEntity, you can do one of the following executions

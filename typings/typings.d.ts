@@ -1,4 +1,3 @@
-import {offsets} from "../src/game/offsets";
 
 declare interface IProcessListEntry {
     cntThreads: number,
@@ -95,10 +94,10 @@ declare module 'memoryJs' {
     export function writeBuffer(handle: number, address: any, buffer: any);
 }
 
-type Resolver<T> = {
-    [Key in  keyof T]?: (type?: EMemoryTypes) => any;
+export type Resolver<T> = {
+    [Key in keyof T]?: (type?: EMemoryTypes) => any;
     } & { base?: any; } & {
     set?: {
-        [Key in  keyof T]?: (value: any, type?: EMemoryTypes) => void;
+        [Key in keyof T]?: (value: any, type?: EMemoryTypes) => void;
         }
 };
