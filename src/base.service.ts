@@ -4,7 +4,7 @@ import {
 } from './base.interfaces';
 import { SocketService } from './network/socket/socket.service';
 import {
-  clientState, entityBase, hackBase, player,
+  clientState, entityBase, gM, hackBase, player, rpm,
 } from './shared/declerations';
 import { PlayerEntity } from './game/entity/entity.interfaces';
 
@@ -47,6 +47,8 @@ export class BaseService {
       player,
       sendMessageToEachWsClient: this.socketService.sendToEachClient.bind(this.socketService),
       offsets: this.config.offsets,
+      getModuleBase: (moduleName: string) => gM(moduleName).modBaseAddr,
+      readMemory: rpm,
     });
 
     private doRun() {

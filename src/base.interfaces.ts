@@ -4,6 +4,7 @@ import { PlayerEntity } from './game/entity/entity.interfaces';
 import { Player } from './game/player/player';
 import { Resolver } from '../typings/typings';
 import { Netvars, OffsetCollection, Signatures } from './offsets';
+import {rpm} from "./shared/declerations";
 
 export interface HackConfig {
     webSocketService?: {
@@ -21,6 +22,8 @@ export interface BaseGameData {
     player: Player;
     offsets: OffsetCollection;
     sendMessageToEachWsClient: (message: any) => void;
+    getModuleBase: (modeName: string) => void;
+    readMemory: typeof rpm,
 }
 export interface AfterEntityLoopData extends BaseGameData{
 
