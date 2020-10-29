@@ -3,7 +3,6 @@ import {getOffsets} from './offsets';
 import {MemoryTypes} from './process/process.interfaces';
 
 getOffsets().then((offsets ) => {
-    process.exit(1);
     const base: BaseService = new BaseService({
         webSocketService: {
             start: false,
