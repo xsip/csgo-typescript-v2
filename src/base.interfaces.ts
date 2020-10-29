@@ -1,16 +1,16 @@
-import { ClientStateService } from './game/clientState/clientState.service';
-import { EntityBase } from './game/entity/entity.service';
-import { PlayerEntity } from './game/entity/entity.interfaces';
-import { Player } from './game/player/player';
 import { Resolver } from '../typings/typings';
+import { ClientStateService } from './game/clientState/clientState.service';
+import { PlayerEntity } from './game/entity/entity.interfaces';
+import { EntityBase } from './game/entity/entity.service';
+import { Player } from './game/player/player';
 import { Netvars, OffsetCollection, Signatures } from './offsets';
-import {rpm} from "./shared/declerations";
+import {rpm} from './shared/declerations';
 
 export interface HackConfig {
     webSocketService?: {
         start: boolean;
         socketServicePort: number;
-    }
+    };
     offsets?: OffsetCollection;
 }
 
@@ -23,12 +23,12 @@ export interface BaseGameData {
     offsets: OffsetCollection;
     sendMessageToEachWsClient: (message: any) => void;
     getModuleBase: (modeName: string) => void;
-    readMemory: typeof rpm,
+    readMemory: typeof rpm;
 }
-export interface AfterEntityLoopData extends BaseGameData{
+export interface AfterEntityLoopData extends BaseGameData {
 
 }
-export interface GameData extends BaseGameData{
+export interface GameData extends BaseGameData {
     currentEntity: PlayerEntity;
     currentEntityIndex: number;
     player: Player;

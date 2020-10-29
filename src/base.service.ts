@@ -2,11 +2,11 @@ import * as rxjs from 'rxjs';
 import {
   AfterEntityLoopData, BaseGameData, GameData, HackConfig,
 } from './base.interfaces';
+import { PlayerEntity } from './game/entity/entity.interfaces';
 import { SocketService } from './network/socket/socket.service';
 import {
   clientState, entityBase, gM, hackBase, player, rpm,
 } from './shared/declerations';
-import { PlayerEntity } from './game/entity/entity.interfaces';
 
 export class BaseService {
     private newDataSubject: rxjs.Subject<GameData> = new rxjs.Subject<GameData>();
@@ -14,8 +14,6 @@ export class BaseService {
     private afterEntityLoopSubject: rxjs.Subject<AfterEntityLoopData> = new rxjs.Subject<AfterEntityLoopData>();
 
     private socketService: SocketService = new SocketService();
-
-    private wsShouldStart = () => (this.config.webSocketService ? this.config.webSocketService.start : false);
 
     private wsStarted: boolean;
 
@@ -39,6 +37,16 @@ export class BaseService {
       this.doRun();
     }
 
+    public onNewData(): rxjs.Subject<GameData> {
+      return this.newDataSubject;
+    }
+
+    public afterEntityLoop(): rxjs.Subject<AfterEntityLoopData> {
+      return this.afterEntityLoopSubject;
+    }
+
+    private wsShouldStart = () => (this.config.webSocketService ? this.config.webSocketService.start : false);
+
     private getBaseReply = (): BaseGameData => ({
       clientState,
       baseIsRunning: true,
@@ -49,7 +57,7 @@ export class BaseService {
       offsets: this.config.offsets,
       getModuleBase: (moduleName: string) => gM(moduleName).modBaseAddr,
       readMemory: rpm,
-    });
+    })
 
     private doRun() {
       hackBase(this.config.offsets, (currentEntity: PlayerEntity, currentEntityIndex: number) => {
@@ -67,13 +75,5 @@ export class BaseService {
           player,
         });
       });
-    }
-
-    public onNewData(): rxjs.Subject<GameData> {
-      return this.newDataSubject;
-    }
-
-    public afterEntityLoop(): rxjs.Subject<AfterEntityLoopData> {
-      return this.afterEntityLoopSubject;
     }
 }

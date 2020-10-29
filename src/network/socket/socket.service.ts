@@ -5,15 +5,13 @@ import WebSocket = require('ws');
 
 
 export class SocketService {
-    private wss: WebSocket.Server;
 
     public connections: WebSocket[] = [];
+    private wss: WebSocket.Server;
 
     private isRunning: boolean;
 
-    constructor() {
-
-    }
+    constructor() {}
 
     public sendToEachClient(data: any) {
       if (this.isRunning) {
@@ -49,11 +47,11 @@ export class SocketService {
       });
       this.isRunning = true;
       afterAdding();
-    };
+    }
 
     private handleRequest = (request: any) => {
       console.log(request);
-    };
+    }
 
     private onOverlayDisconnect(ws: WebSocket) {
       this.connections = this.connections.filter((w) => w !== ws) as any;

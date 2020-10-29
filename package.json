@@ -5,14 +5,15 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "prepare" : "npm run build",
+    "prepare": "npm run build",
     "build": "tsc",
     "demo": "ts-node-dev src/main.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "memoryjs": "^3.2.3",
+    "memoryjs": "github:matteofumagalli1275/memoryjs#node13",
+    "node-gyp": "^7.1.2",
     "ws": "^7.2.1"
   },
   "devDependencies": {
@@ -26,6 +27,6 @@
     "http-server": "^0.12.1",
     "ts-node": "^8.6.1",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.9.7"
   }
 }

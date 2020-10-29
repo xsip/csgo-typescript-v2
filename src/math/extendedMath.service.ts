@@ -1,3 +1,4 @@
+/* tslint:disable:no-empty */
 export interface Vec3 {
     x: number;
     y: number;
@@ -5,14 +6,11 @@ export interface Vec3 {
 }
 export interface Vec2 {
     x: number;
-    y: number
+    y: number;
 }
 
 
 export class ExtendedMath {
-  constructor() {
-
-  }
 
   public static subVec(from: Vec3, sub: Vec3): Vec3 {
     return {
@@ -52,7 +50,7 @@ export class ExtendedMath {
 
   public static angleDifference(viewAngles: Vec3, targetAngles: Vec3, dist: number): number {
     const pitch: number = viewAngles.x - targetAngles.x;
-    const yaw : number = viewAngles.y - targetAngles.y;
+    const yaw: number = viewAngles.y - targetAngles.y;
 
     return Math.sqrt(Math.pow(pitch, 2.0) + Math.pow(yaw, 2.0));
   }
@@ -82,5 +80,8 @@ export class ExtendedMath {
     ret.x = x;
     ret.y = y;
     return ret;
+  }
+  constructor() {
+
   }
 }

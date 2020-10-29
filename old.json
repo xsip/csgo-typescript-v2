@@ -1,0 +1,12 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "tsRules": {
+        "quotemark": [true, "single"],
+        "object-literal-sort-keys": false
+    },
+    "rules": {},
+    "rulesDirectory": []
+}

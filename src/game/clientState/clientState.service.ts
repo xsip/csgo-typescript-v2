@@ -1,9 +1,9 @@
+import { Resolver } from '../../../typings/typings';
+import { Vec3 } from '../../math/extendedMath.service';
+import { MemoryTypesForSignatures, OffsetCollection, Signatures } from '../../offsets';
 import {
   createResolver, gM, mT, rpm,
 } from '../../shared/declerations';
-import { OffsetCollection, Signatures, MemoryTypesForSignatures } from '../../offsets';
-import { Resolver } from '../../../typings/typings';
-import { Vec3 } from '../../math/extendedMath.service';
 
 export class ClientStateService {
   public set viewAngles(angles: Vec3) {
@@ -43,7 +43,8 @@ export class ClientStateService {
 
     private resolver(): Resolver<Signatures> {
       if (!this.resolverResult) {
-        this.resolverResult = createResolver<Signatures>(this.clientStateBase, this.offsets.signatures, MemoryTypesForSignatures, {});
+        this.resolverResult = createResolver<Signatures>(
+            this.clientStateBase, this.offsets.signatures, MemoryTypesForSignatures, {});
       }
       return this.resolverResult;
     }

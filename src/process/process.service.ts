@@ -1,6 +1,6 @@
 import * as memoryJs from 'memoryJs';
 import {
-  IModuleObject, IModuleListEntry, MemoryTypes, IProcessObject,
+  IModuleListEntry, IModuleObject, IProcessObject,
 } from 'memoryJs';
 import { MemoryTypes } from './process.interfaces';
 
@@ -28,25 +28,11 @@ export class ProcessService implements IProcessObject {
       this.getAllModules();
     }
 
-    private copyInstanceToClass(inst: IProcessObject) {
-      for (const key in inst) {
-        this[key] = inst[key];
-      }
-    }
-
     getModule(moduleName): IModuleListEntry {
       if (!this.modules[moduleName]) {
         this.modules[moduleName] = memoryJs.findModule(moduleName, this.th32ProcessID);
       }
       return this.modules[moduleName];
-    }
-
-    private getAllModules(): IModuleObject {
-      memoryJs.getModules(this.th32ProcessID).map((m) => {
-        if (m.szModule) {
-          this.getModule(m.szModule);
-        }
-      });
     }
 
     readMemory(addr: any, type: MemoryTypes) {
@@ -67,5 +53,19 @@ export class ProcessService implements IProcessObject {
 
     writeBuffer(addr: any, buffer: number, handle?: IModuleListEntry) {
       return memoryJs.writeBuffer(handle ? handle.hModule : this.handle, addr, buffer);
+    }
+
+    private copyInstanceToClass(inst: IProcessObject) {
+      for (const key in inst) {
+        this[key] = inst[key];
+      }
+    }
+
+    private getAllModules(): IModuleObject {
+      memoryJs.getModules(this.th32ProcessID).map((m) => {
+        if (m.szModule) {
+          this.getModule(m.szModule);
+        }
+      });
     }
 }

@@ -1,20 +1,11 @@
-import {
-  MemoryTypesForNetvars,
-  MemoryTypesForSignatures,
-  OffsetCollection,
-  Netvars,
-  Signatures,
-} from '../../offsets';
-import {
-  createResolver, gM, mT, rbf, rpm,
-} from '../../shared/declerations';
+import {MiscEntityResolver, PlayerEntityResolver} from '../../base.interfaces';
 
-import { Vec3 } from '../../math/extendedMath.service';
-import { PlayerEntity } from './entity.interfaces';
-import { MemoryTypes } from '../../process/process.interfaces';
-import { MiscEntityResolver, PlayerEntityResolver } from '../../base.interfaces';
-import { WeaponEntity } from './weapon.entity';
-
+import {Vec3} from '../../math/extendedMath.service';
+import {MemoryTypesForNetvars, MemoryTypesForSignatures, Netvars, OffsetCollection, Signatures} from '../../offsets';
+import {MemoryTypes} from '../../process/process.interfaces';
+import {createResolver, gM, mT, rbf, rpm} from '../../shared/declerations';
+import {PlayerEntity} from './entity.interfaces';
+import {WeaponEntity} from './weapon.entity';
 
 export class EntityBase {
   private entityListBaseAddress;
@@ -30,33 +21,6 @@ export class EntityBase {
   }
 
   public entity = (entityIndex: number) => this.entityList[entityIndex];
-
-  private getPlayerResolver(entityIndex: number): PlayerEntityResolver {
-    this.playerEntityBaseList[entityIndex] = this.getBaseOffset(entityIndex);
-    return this.buildPlayerResolver(entityIndex);
-  }
-
-  private getMiscResolver(entityIndex: number): MiscEntityResolver {
-    this.miscEntityBaseList[entityIndex] = this.getBaseOffset(entityIndex);
-    return this.buildMiscResolver(entityIndex);
-  }
-
-  private getBaseOffset(entityIndex: number): number {
-    return rpm(this.entityListBaseAddress + 0x10 * entityIndex, mT.dword);
-  }
-
-  private buildPlayerResolver(entityIndex: number): PlayerEntityResolver {
-    const resolver: PlayerEntityResolver = createResolver<Netvars>(this.playerEntityBaseList[entityIndex], this.offsets.netvars, MemoryTypesForNetvars, {});
-    resolver.base = this.playerEntityBaseList[entityIndex];
-    return resolver;
-  }
-
-  private buildMiscResolver(entityIndex: number): MiscEntityResolver {
-    // eslint-disable-next-line no-undef
-    const resolver: MiscEntityResolver = createResolver<Netvars & Signatures>(this.playerEntityBaseList[entityIndex], { ...this.offsets.netvars, ...this.offsets.signatures }, { ...MemoryTypesForNetvars, ...MemoryTypesForSignatures }, {});
-    resolver.base = this.miscEntityBaseList[entityIndex];
-    return resolver;
-  }
 
   update(entityId: number) {
     const p = this.getPlayerResolver(entityId);
@@ -87,6 +51,37 @@ export class EntityBase {
       boneMatrixList[i] = boneMatrixBuffer.readFloatLE(i * 0x4);
     }
     return { x: boneMatrixList[3], y: boneMatrixList[7], z: boneMatrixList[13] };
+  }
+
+  private getPlayerResolver(entityIndex: number): PlayerEntityResolver {
+    this.playerEntityBaseList[entityIndex] = this.getBaseOffset(entityIndex);
+    return this.buildPlayerResolver(entityIndex);
+  }
+
+  private getMiscResolver(entityIndex: number): MiscEntityResolver {
+    this.miscEntityBaseList[entityIndex] = this.getBaseOffset(entityIndex);
+    return this.buildMiscResolver(entityIndex);
+  }
+
+  private getBaseOffset(entityIndex: number): number {
+    return rpm(this.entityListBaseAddress + 0x10 * entityIndex, mT.dword);
+  }
+
+  private buildPlayerResolver(entityIndex: number): PlayerEntityResolver {
+    const resolver: PlayerEntityResolver = createResolver<Netvars>(
+        this.playerEntityBaseList[entityIndex], this.offsets.netvars, MemoryTypesForNetvars, {});
+    resolver.base = this.playerEntityBaseList[entityIndex];
+    return resolver;
+  }
+
+  private buildMiscResolver(entityIndex: number): MiscEntityResolver {
+    // eslint-disable-next-line no-undef
+    const resolver: MiscEntityResolver = createResolver<Netvars & Signatures>(
+        this.playerEntityBaseList[entityIndex],
+        { ...this.offsets.netvars, ...this.offsets.signatures },
+        { ...MemoryTypesForNetvars, ...MemoryTypesForSignatures }, {});
+    resolver.base = this.miscEntityBaseList[entityIndex];
+    return resolver;
   }
 
 

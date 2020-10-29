@@ -1,14 +1,7 @@
-import { MiscEntityResolver } from '../../base.interfaces';
-import { WeaponIndex } from '../../shared/declerations';
+import {MiscEntityResolver} from '../../base.interfaces';
+import {WeaponIndex} from '../../shared/declerations';
 
 export class WeaponEntity {
-    public base: number;
-
-    constructor(private weaponEntityBase: MiscEntityResolver) {
-      this.base = weaponEntityBase.base;
-    }
-
-    idResolver = () => this.weaponEntityBase.m_iItemDefinitionIndex();
 
     set id(id: number) {
       console.log(`Weapon Entity ID is not setable! | ${id}`);
@@ -18,14 +11,20 @@ export class WeaponEntity {
       return this.idResolver();
     }
 
-    private getWeaponKeys(): string[] {
-      return Object.keys(WeaponIndex).reduce((arr, key) => {
-        if (!arr.includes(key)) {
-          arr.push(WeaponIndex[key]);
-        }
-        return arr;
-      }, []);
+    set name(name: string) {
+      console.log(`Weapon Entity name is not setable! | ${name}`);
     }
+
+    get name() {
+      return this.nameResolver();
+    }
+    public base: number;
+
+    constructor(private weaponEntityBase: MiscEntityResolver) {
+      this.base = weaponEntityBase.base;
+    }
+
+    idResolver = () => this.weaponEntityBase.m_iItemDefinitionIndex();
 
     nameResolver() {
       const weaponKeys = this.getWeaponKeys();
@@ -39,11 +38,12 @@ export class WeaponEntity {
       return 'unknown weapon';
     }
 
-    set name(name: string) {
-      console.log(`Weapon Entity name is not setable! | ${name}`);
-    }
-
-    get name() {
-      return this.nameResolver();
+    private getWeaponKeys(): string[] {
+      return Object.keys(WeaponIndex).reduce((arr, key) => {
+        if (!arr.includes(key)) {
+          arr.push(WeaponIndex[key]);
+        }
+        return arr;
+      }, []);
     }
 }
