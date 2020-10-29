@@ -17,7 +17,7 @@ export class BaseService {
 
     private wsStarted: boolean;
 
-    constructor(private config: HackConfig = {
+    constructor(public config: HackConfig = {
       webSocketService: {
         start: false,
         socketServicePort: 8080,

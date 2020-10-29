@@ -30,6 +30,7 @@ export class ClientStateService {
 
     constructor(private offsets: OffsetCollection) {
       this.clientStateBase = rpm(gM('engine.dll').modBaseAddr + this.offsets.signatures.dwClientState, mT.dword);
+      console.log(this.clientStateBase);
     }
 
 

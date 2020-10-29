@@ -1,10 +1,10 @@
 import { BaseService } from './base.service';
-import { MemoryTypes } from './process/process.interfaces';
 import { offsets } from './offsets';
+import { MemoryTypes } from './process/process.interfaces';
 
 const base: BaseService = new BaseService({
   webSocketService: {
-    start: true,
+    start: false,
     socketServicePort: 8080,
   },
   offsets,
@@ -18,7 +18,10 @@ let viewAngles: any;
 let vecView: any;
 
 base.afterEntityLoop().subscribe((data) => {
-  data.sendMessageToEachWsClient(JSON.stringify({ entities: allLocations, local: { position, viewAngles, vecView } }));
+  if (base.config.webSocketService.start) {
+    data.sendMessageToEachWsClient(
+        JSON.stringify({ entities: allLocations, local: { position, viewAngles, vecView } }));
+  }
   allLocations = [];
 });
 

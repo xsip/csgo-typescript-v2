@@ -22,7 +22,7 @@ export class Player {
   }
 
 
-  private panoramaBase = () => gM('client_panorama.dll').modBaseAddr;
+  private panoramaBase = () => gM('client.dll').modBaseAddr;
 
   private performAction(action: number) {
     if (!this.canDoCollection[action]) {

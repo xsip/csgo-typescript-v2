@@ -17,7 +17,7 @@ export class EntityBase {
   private entityList: PlayerEntity[] = [];
 
   constructor(private offsets: OffsetCollection) {
-    this.entityListBaseAddress = gM('client_panorama.dll').modBaseAddr + this.offsets.signatures.dwEntityList;
+    this.entityListBaseAddress = gM('client.dll').modBaseAddr + this.offsets.signatures.dwEntityList;
   }
 
   public entity = (entityIndex: number) => this.entityList[entityIndex];

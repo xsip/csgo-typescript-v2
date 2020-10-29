@@ -10,7 +10,7 @@ export class RendererService {
     }
 
     readViewMatrix() {
-        const viewMatOffset = gM('client_panorama.dll').modBaseAddr + this.offsets.signatures.dwViewMatrix;
+        const viewMatOffset = gM('client.dll').modBaseAddr + this.offsets.signatures.dwViewMatrix;
         const matBuffer: Buffer = rbf(viewMatOffset, 64);
 
         for (let i = 0; i < 16; i++) {
