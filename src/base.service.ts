@@ -88,21 +88,21 @@ export class BaseService {
         const main = rxjs.interval(0);
 
         main.subscribe(() => {
-            for (let i = 0; i < Global.clientState.maxEntitys; i++) {
-                Global.entityBase.update(i);
-                const entity = Global.entityBase.entity(i);
-                if (entity && entity.lifeState === 0) {
-                    if ((entity.team === 2 || entity.team === 3)) {
-                        this.newDataSubject.next({
-                            ...this.getBaseReply(),
-                            currentEntity: entity,
-                            localEntity: Global.entityBase.entity(Global.clientState.localEntityIndex),
-                            currentEntityIndex: i,
-                            player: Global.player,
-                        });
-                        // forEachPlayer(entity, i);
-                    }
+            let loaded = [];
+            for (let i = 0; i < Global.clientState.maxEntitys; i += 3) {
+                if (!loaded.includes(i)) {
+                    loaded.push(i);
+                    this.sendNewPlayerDataByIndex(i);
                 }
+                if (!loaded.includes(i + 1) && i + 1 < Global.clientState.maxEntitys) {
+                    this.sendNewPlayerDataByIndex(i + 1);
+                    loaded.push(i + 1);
+                }
+                if (!loaded.includes(i + 2) && i + 2 < Global.clientState.maxEntitys) {
+                    this.sendNewPlayerDataByIndex(i + 2);
+                    loaded.push(i + 2);
+                }
+
             }
 
             update();
@@ -113,5 +113,22 @@ export class BaseService {
                 player: Global.player,
             });
         });
+    }
+
+    private sendNewPlayerDataByIndex(i: number) {
+        Global.entityBase.update(i);
+        const entity = Global.entityBase.entity(i);
+        if (entity && entity.lifeState === 0) {
+            if ((entity.team === 2 || entity.team === 3)) {
+                this.newDataSubject.next({
+                    ...this.getBaseReply(),
+                    currentEntity: entity,
+                    localEntity: Global.entityBase.entity(Global.clientState.localEntityIndex),
+                    currentEntityIndex: i,
+                    player: Global.player,
+                });
+                // forEachPlayer(entity, i);
+            }
+        }
     }
 }

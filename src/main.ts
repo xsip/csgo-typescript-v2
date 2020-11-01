@@ -1,8 +1,10 @@
 import {BaseService} from './base.service';
+import {ExtendedMath, Vec3} from "./math/extendedMath.service";
 import {getOffsets} from './offsets';
 import {MemoryTypes} from './process/process.interfaces';
+import {Global} from "./shared/declerations";
 
-getOffsets().then((offsets ) => {
+getOffsets().then((offsets) => {
     const base: BaseService = new BaseService({
         webSocketService: {
             start: false,
@@ -32,8 +34,17 @@ getOffsets().then((offsets ) => {
         position = data.localEntity.origin;
         viewAngles = data.clientState.viewAngles;
         vecView = data.localEntity.vecView;
+        // console.log(data.localEntity.read(offsets.netvars.m_iCrosshairId, Global.mT.int));
 
+        // console.log(data.localEntity.punchAngles);
         if (data.localEntity.crosshairEntity) {
+            // data.entityBase.update(data.localEntity.crosshairEntity.index);
+            const headPosLocal = ExtendedMath.addVec(
+                data.localEntity.origin, data.localEntity.vecView);
+            const headPosEnemy = data.localEntity.crosshairEntity.getBonePosition(8);
+            const aimAngles = ExtendedMath.calcAngle(headPosLocal, headPosEnemy);
+            data.clientState.viewAngles = ExtendedMath.subVec(
+                aimAngles, ExtendedMath.multiplyVec(data.localEntity.punchAngles, 2.0));
             data.player.attack();
         }
         // console.log(data.localEntity.weaponEntity.name);

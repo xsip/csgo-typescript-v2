@@ -25,16 +25,19 @@ export class EntityBase {
   update(entityId: number) {
     const p = this.getPlayerResolver(entityId);
     this.entityList[entityId] = {
+      index: entityId,
       ...this.entityList[entityId],
       health: p.m_iHealth(),
       team: p.m_iTeamNum(),
       origin: p.m_vecOrigin(),
       vecView: p.m_vecViewOffset(),
+      punchAngles: p.m_aimPunchAngle(),
       lifeState: p.m_lifeState(),
       getBonePosition: (bone: number) => this.getBonePositionByResolver(p, bone),
       read: <T>(offset: number, type: MemoryTypes): T => Global.rpm(p.base + offset, type) as T,
       readBuffer: (offset: number, bytes: number): Buffer => Global.rbf(p.base + offset, bytes) as Buffer,
-      crosshairEntity: this.entity(p.m_iCrosshairId() || -1),
+      crosshairId: p.m_iCrosshairId(),
+      crosshairEntity: this.entity(p.m_iCrosshairId() - 1 || -1),
     };
     const currentEntity: PlayerEntity = this.entity(entityId);
     const currentWeaponEntityForEntity = this.getWeaponEntityResolver(p);
@@ -50,10 +53,10 @@ export class EntityBase {
     for (let i = 0; i < 16; i++) {
       boneMatrixList[i] = boneMatrixBuffer.readFloatLE(i * 0x4);
     }
-    return { x: boneMatrixList[3], y: boneMatrixList[7], z: boneMatrixList[13] };
+    return { x: boneMatrixList[3], y: boneMatrixList[7], z: boneMatrixList[11] };
   }
 
-  private getPlayerResolver(entityIndex: number): PlayerEntityResolver {
+  public getPlayerResolver(entityIndex: number): PlayerEntityResolver {
     this.playerEntityBaseList[entityIndex] = this.getBaseOffset(entityIndex);
     return this.buildPlayerResolver(entityIndex);
   }

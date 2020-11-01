@@ -7,12 +7,15 @@ export interface Entity {
 }
 
 export interface PlayerEntity extends Entity {
+    index?: number;
     health: number;
     team: number;
     origin: Vec3;
     vecView: Vec3;
+    punchAngles: Vec3;
     lifeState: number;
     weaponEntity?: WeaponEntity;
+    crosshairId?: number;
     crosshairEntity: PlayerEntity | null;
     getBonePosition: (bone: number) => Vec3;
 }
