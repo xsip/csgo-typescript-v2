@@ -15,29 +15,13 @@ getOffsets().then((offsets) => {
 
     base.run();
 
-    let allLocations = [];
+    /*let allLocations = [];
     let position: any;
     let viewAngles: any;
-    let vecView: any;
+    let vecView: any;*/
 
     base.afterEntityLoop().subscribe((data) => {
-        if (base.config.webSocketService.start) {
-            data.sendMessageToEachWsClient(
-                JSON.stringify({entities: allLocations, local: {position, viewAngles, vecView}}));
-        }
-        allLocations = [];
-    });
-
-    base.onNewData().subscribe((data) => {
-        const crosshairId = data.localEntity.read<number>(data.offsets.netvars.m_iCrosshairId, MemoryTypes.int);
-        allLocations.push(data.currentEntity.origin);
-        position = data.localEntity.origin;
-        viewAngles = data.clientState.viewAngles;
-        vecView = data.localEntity.vecView;
-        // console.log(data.localEntity.read(offsets.netvars.m_iCrosshairId, Global.mT.int));
-
-        // console.log(data.localEntity.punchAngles);
-        if (data.localEntity.crosshairEntity) {
+        /*if (data.localEntity.crosshairEntity) {
             // data.entityBase.update(data.localEntity.crosshairEntity.index);
             const headPosLocal = ExtendedMath.addVec(
                 data.localEntity.origin, data.localEntity.vecView);
@@ -46,7 +30,36 @@ getOffsets().then((offsets) => {
             data.clientState.viewAngles = ExtendedMath.subVec(
                 aimAngles, ExtendedMath.multiplyVec(data.localEntity.punchAngles, 2.0));
             data.player.attack();
+        }*/
+        /*if (base.config.webSocketService.start) {
+            data.sendMessageToEachWsClient(
+                JSON.stringify({entities: allLocations, local: {position, viewAngles, vecView}}));
         }
+        allLocations = [];*/
+    });
+
+    base.onNewData().subscribe((data) => {
+        const headPosLocal = ExtendedMath.addVec(
+            data.localEntity.origin, data.localEntity.vecView);
+        const headPosEnemy = data.currentEntity.getBonePosition(8);
+        const aimAngles = ExtendedMath.calcAngle(headPosLocal, headPosEnemy);
+        const angleDiff = ExtendedMath.subVec(data.clientState.viewAngles, aimAngles);
+        const fov = 10;
+        if (((angleDiff.x > 0 && angleDiff.x <= fov) || (angleDiff.x < 0 && angleDiff.x >= fov * -1)) &&
+            ((angleDiff.y > 0 && angleDiff.y <= fov) || (angleDiff.y < 0 && angleDiff.y >= fov * -1))) {
+            if (data.currentEntity.team !==  data.localEntity.team && data.currentEntity.health >= 1) {
+                data.clientState.viewAngles = ExtendedMath.subVec(
+                    aimAngles, ExtendedMath.multiplyVec(data.localEntity.punchAngles, 2.0));
+                data.player.attack();
+            }
+        } else {
+        }
+        /*const crosshairId = data.localEntity.read<number>(data.offsets.netvars.m_iCrosshairId, MemoryTypes.int);
+        allLocations.push(data.currentEntity.origin);
+        position = data.localEntity.origin;
+        viewAngles = data.clientState.viewAngles;
+        vecView = data.localEntity.vecView;*/
+
         // console.log(data.localEntity.weaponEntity.name);
         // console.log(data.localEntity.weaponEntity.id);
         // There are Three ways to get data:
