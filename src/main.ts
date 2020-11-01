@@ -1,8 +1,8 @@
 import {BaseService} from './base.service';
-import {ExtendedMath, Vec3} from "./math/extendedMath.service";
+import {ExtendedMath, Vec3} from './math/extendedMath.service';
 import {getOffsets} from './offsets';
 import {MemoryTypes} from './process/process.interfaces';
-import {Global} from "./shared/declerations";
+import {Global} from './shared/declerations';
 
 getOffsets().then((offsets) => {
     const base: BaseService = new BaseService({
@@ -70,6 +70,6 @@ getOffsets().then((offsets) => {
 
         //  console.log(data.entityBase.entity(10).getBonePosition(8));
     });
-}).catch(e => {
+}).catch((e) => {
     console.log('couldnt load offsets...');
 });
