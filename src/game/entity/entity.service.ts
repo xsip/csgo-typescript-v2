@@ -3,7 +3,7 @@ import {MiscEntityResolver, PlayerEntityResolver} from '../../base.interfaces';
 import {Vec3} from '../../math/extendedMath.service';
 import {MemoryTypesForNetvars, MemoryTypesForSignatures, Netvars, OffsetCollection, Signatures} from '../../offsets';
 import {MemoryTypes} from '../../process/process.interfaces';
-import {createResolver, gM, mT, rbf, rpm} from '../../shared/declerations';
+import {Global} from '../../shared/declerations';
 import {PlayerEntity} from './entity.interfaces';
 import {WeaponEntity} from './weapon.entity';
 
@@ -17,7 +17,7 @@ export class EntityBase {
   private entityList: PlayerEntity[] = [];
 
   constructor(private offsets: OffsetCollection) {
-    this.entityListBaseAddress = gM('client.dll').modBaseAddr + this.offsets.signatures.dwEntityList;
+    this.entityListBaseAddress = Global.gM('client.dll').modBaseAddr + this.offsets.signatures.dwEntityList;
   }
 
   public entity = (entityIndex: number) => this.entityList[entityIndex];
@@ -32,8 +32,8 @@ export class EntityBase {
       vecView: p.m_vecViewOffset(),
       lifeState: p.m_lifeState(),
       getBonePosition: (bone: number) => this.getBonePositionByResolver(p, bone),
-      read: <T>(offset: number, type: MemoryTypes): T => rpm(p.base + offset, type) as T,
-      readBuffer: (offset: number, bytes: number): Buffer => rbf(p.base + offset, bytes) as Buffer,
+      read: <T>(offset: number, type: MemoryTypes): T => Global.rpm(p.base + offset, type) as T,
+      readBuffer: (offset: number, bytes: number): Buffer => Global.rbf(p.base + offset, bytes) as Buffer,
       crosshairEntity: this.entity(p.m_iCrosshairId() || -1),
     };
     const currentEntity: PlayerEntity = this.entity(entityId);
@@ -44,8 +44,8 @@ export class EntityBase {
   }
 
   getBonePositionByResolver(entity: PlayerEntityResolver, bone: number): Vec3 {
-    const boneBase = entity.m_dwBoneMatrix(mT.dword);
-    const boneMatrixBuffer: Buffer = rbf(boneBase + (0x30 * bone), 64);
+    const boneBase = entity.m_dwBoneMatrix(Global.mT.dword);
+    const boneMatrixBuffer: Buffer = Global.rbf(boneBase + (0x30 * bone), 64);
     const boneMatrixList: number[] = [];
     for (let i = 0; i < 16; i++) {
       boneMatrixList[i] = boneMatrixBuffer.readFloatLE(i * 0x4);
@@ -64,11 +64,11 @@ export class EntityBase {
   }
 
   private getBaseOffset(entityIndex: number): number {
-    return rpm(this.entityListBaseAddress + 0x10 * entityIndex, mT.dword);
+    return Global.rpm(this.entityListBaseAddress + 0x10 * entityIndex, Global.mT.dword);
   }
 
   private buildPlayerResolver(entityIndex: number): PlayerEntityResolver {
-    const resolver: PlayerEntityResolver = createResolver<Netvars>(
+    const resolver: PlayerEntityResolver = Global.createResolver<Netvars>(
         this.playerEntityBaseList[entityIndex], this.offsets.netvars, MemoryTypesForNetvars, {});
     resolver.base = this.playerEntityBaseList[entityIndex];
     return resolver;
@@ -76,7 +76,7 @@ export class EntityBase {
 
   private buildMiscResolver(entityIndex: number): MiscEntityResolver {
     // eslint-disable-next-line no-undef
-    const resolver: MiscEntityResolver = createResolver<Netvars & Signatures>(
+    const resolver: MiscEntityResolver = Global.createResolver<Netvars & Signatures>(
         this.playerEntityBaseList[entityIndex],
         { ...this.offsets.netvars, ...this.offsets.signatures },
         { ...MemoryTypesForNetvars, ...MemoryTypesForSignatures }, {});

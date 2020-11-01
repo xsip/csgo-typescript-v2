@@ -2,7 +2,7 @@ import { Resolver } from '../../../typings/typings';
 import { Vec3 } from '../../math/extendedMath.service';
 import { MemoryTypesForSignatures, OffsetCollection, Signatures } from '../../offsets';
 import {
-  createResolver, gM, mT, rpm,
+  Global,
 } from '../../shared/declerations';
 
 export class ClientStateService {
@@ -29,7 +29,8 @@ export class ClientStateService {
 
 
     constructor(private offsets: OffsetCollection) {
-      this.clientStateBase = rpm(gM('engine.dll').modBaseAddr + this.offsets.signatures.dwClientState, mT.dword);
+      this.clientStateBase = Global.rpm(
+          Global.gM('engine.dll').modBaseAddr + this.offsets.signatures.dwClientState, Global.mT.dword);
       console.log(this.clientStateBase);
     }
 
@@ -44,7 +45,7 @@ export class ClientStateService {
 
     private resolver(): Resolver<Signatures> {
       if (!this.resolverResult) {
-        this.resolverResult = createResolver<Signatures>(
+        this.resolverResult = Global.createResolver<Signatures>(
             this.clientStateBase, this.offsets.signatures, MemoryTypesForSignatures, {});
       }
       return this.resolverResult;

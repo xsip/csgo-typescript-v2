@@ -1,6 +1,6 @@
 import {OffsetCollection} from '../../offsets';
 import {MemoryTypes} from '../../process/process.interfaces';
-import {gM, wpm} from '../../shared/declerations';
+import {Global} from '../../shared/declerations';
 
 export class Player {
 
@@ -22,7 +22,7 @@ export class Player {
   }
 
 
-  private panoramaBase = () => gM('client.dll').modBaseAddr;
+  private panoramaBase = () => Global.gM('client.dll').modBaseAddr;
 
   private performAction(action: number) {
     if (!this.canDoCollection[action]) {
@@ -31,11 +31,11 @@ export class Player {
 
     if (this.canDoCollection[action]) {
       this.canDoCollection[action] = false;
-      wpm(this.panoramaBase() + action, 5, MemoryTypes.int);
+      Global.wpm(this.panoramaBase() + action, 5, MemoryTypes.int);
     }
 
     setTimeout(() => {
-      wpm(this.panoramaBase() + action, 4, MemoryTypes.int);
+      Global.wpm(this.panoramaBase() + action, 4, MemoryTypes.int);
       this.canDoCollection[action] = true;
     }, 10);
   }

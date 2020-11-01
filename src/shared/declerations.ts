@@ -1,11 +1,8 @@
 import {IModuleListEntry, Resolver} from '../../typings/typings';
 import {ClientStateService} from '../game/clientState/clientState.service';
-
-import {PlayerEntity} from '../game/entity/entity.interfaces';
 import {EntityBase} from '../game/entity/entity.service';
 import {Player} from '../game/player/player';
 import {RendererService} from '../game/renderer/renderer.service';
-import {OffsetCollection} from '../offsets';
 import {MemoryTypes} from '../process/process.interfaces';
 import {ProcessService} from '../process/process.service';
 
@@ -13,83 +10,46 @@ const notInitializedFunc = () => {
     throw Error('Globals not initialized!!');
 };
 
-export let proc: ProcessService;
-export let gM: (moduleName: string) => IModuleListEntry = notInitializedFunc;
-export let rpm: typeof ProcessService.prototype.readMemory = notInitializedFunc;
-export let rbf: typeof ProcessService.prototype.readBuffer = notInitializedFunc;
-export let wpm: typeof ProcessService.prototype.writeMemory = notInitializedFunc;
-export const mT = MemoryTypes;
+export class Global {
+    public static gM: (moduleName: string) => IModuleListEntry = notInitializedFunc;
+    public static rpm: typeof ProcessService.prototype.readMemory = notInitializedFunc;
+    public static rbf: typeof ProcessService.prototype.readBuffer = notInitializedFunc;
+    public static wpm: typeof ProcessService.prototype.writeMemory = notInitializedFunc;
+    public static mT = MemoryTypes;
 
-export let entityBase: EntityBase;
+    public static entityBase: EntityBase;
+    public static clientState: ClientStateService;
+    public static renderer: RendererService;
+    public static player: Player;
 
-export let clientState: ClientStateService;
-export let renderer: RendererService;
-export let player: Player;
-export const createResolver = <T, U = {}>(
-    baseOffset: any, offsetList: T,
-    typesForSignatures?: { [index: string]: MemoryTypes }, extendBy?: U): Resolver<T> => {
-    const resolver: Resolver<typeof offsetList> & U = {
-        base: baseOffset,
-        ...extendBy || {},
-        set: {},
-    } as Resolver<typeof offsetList> & U;
-
-    for (const k in offsetList as Object) {
-        if (offsetList[k]) {
-            resolver[k] = (type?: MemoryTypes) => rpm(resolver.base + offsetList[k], type || typesForSignatures[k]);
-            resolver.set[k] = (value: any, type?: MemoryTypes) => {
-                wpm(resolver.base + offsetList[k], value, type || typesForSignatures[k]);
-            };
-        } else {
-            resolver[k] = (type?: MemoryTypes) => console.log(`${k} is not a valid offset`);
-            resolver.set[k] = (value: any, type?: MemoryTypes) => {
-                console.log(`${k} is not a valid offset`);
-            };
-        }
-    }
-
-    return resolver;
-};
-process.title = 'External Cs go!';
-export const hackBase = (
-    offsets: OffsetCollection,
-    forEachPlayer: (enemy: PlayerEntity, entityIndex: number) => void,
-    onUpdate: () => void) => {
-    proc = new ProcessService('csgo.exe');
-    gM = proc.getModule.bind(proc);
-    rpm = proc.readMemory.bind(proc);
-    rbf = proc.readBuffer.bind(proc);
-    wpm = proc.writeMemory.bind(proc);
-
-    clientState = new ClientStateService(offsets);
-    entityBase = new EntityBase(offsets);
-    renderer = new RendererService(offsets);
-    player = new Player(offsets);
-    console.log('hack initialized..\nstarting main loop..');
-
-    const update = () => {
-        clientState.update();
-        entityBase.update(clientState.localEntityIndex);
-        renderer.readViewMatrix();
-    };
-
-    update();
-
-    const main = setInterval(() => {
-        for (let i = 0; i < clientState.maxEntitys; i++) {
-            entityBase.update(i);
-            const entity = entityBase.entity(i);
-            if (entity && entity.lifeState === 0) {
-                if ((entity.team === 2 || entity.team === 3)) {
-                    forEachPlayer(entity, i);
-                }
+    public static createResolver = <T, U = {}>(
+        baseOffset: any, offsetList: T,
+        typesForSignatures?: { [index: string]: MemoryTypes }, extendBy?: U): Resolver<T> => {
+        const resolver: Resolver<typeof offsetList> & U = {
+            base: baseOffset,
+            ...extendBy || {},
+            set: {},
+        } as Resolver<typeof offsetList> & U;
+        for (const k in offsetList as Object) {
+            if (offsetList[k]) {
+                resolver[k] = (type?: MemoryTypes) =>
+                    Global.rpm(resolver.base + offsetList[k], type || typesForSignatures[k]);
+                resolver.set[k] = (value: any, type?: MemoryTypes) => {
+                    Global.wpm(resolver.base + offsetList[k], value, type || typesForSignatures[k]);
+                };
+            } else {
+                resolver[k] = (type?: MemoryTypes) => console.log(`${k} is not a valid offset`);
+                resolver.set[k] = (value: any, type?: MemoryTypes) => {
+                    console.log(`${k} is not a valid offset`);
+                };
             }
         }
 
-        update();
-        onUpdate();
-    }, 0);
-};
+        return resolver;
+    }
+}
+
+process.title = 'External Cs go!';
 
 export enum WeaponIndex {
     WEAPON_DEAGLE = 1,
@@ -144,5 +104,5 @@ export enum WeaponIndex {
     WEAPON_KNIFE_FALCHION = 512,
     WEAPON_KNIFE_SURVIVAL_BOWIE = 514,
     WEAPON_KNIFE_BUTTERFLY = 515,
-    WEAPON_KNIFE_PUSH = 516
+    WEAPON_KNIFE_PUSH = 516,
 }
